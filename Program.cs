@@ -1,6 +1,4 @@
-﻿using System.Data;
-
-class Program {
+﻿class Program {
     public static void Main(string[] args) {
         Console.WriteLine("Mastermind");
         Console.WriteLine("----------\n");
@@ -9,10 +7,11 @@ class Program {
             PlayGame();
             Console.WriteLine("Would you like to play again? (y/n)");
             try {
-                string input = Console.ReadLine();
+                string? input = Console.ReadLine();
                 if (input != "y") {
                     break;
                 }
+                Console.Write("\n\n\n");
             } catch {
                 break;
             }
@@ -31,15 +30,55 @@ class Program {
 
     
     public static void PlayGame() {
+        List<int> answer = GenerateAnswer();
+        List<int> guess;
+        string feedback;
 
+        // i represents the number of guesses remaining
+        for (int i = 10; i > 0; i--) {
+            Console.WriteLine($"Guesses remaining: {i}");
+            guess = GetGuess();
+
+            if (CheckGuess(guess, answer)) {
+                Console.WriteLine($"Victory! The answer was {ListToString(answer)}.\n");
+                return;
+            }
+
+            feedback = ProvideFeedback(guess, answer);
+            Console.WriteLine($"Feedback: {feedback}\n");
+        }
+
+        Console.WriteLine($"Defeat... The answer was {ListToString(answer)}.\n");
+    }
+
+    // prompts user for their guess and performs input validation
+    public static List<int> GetGuess() {
+        List<int> inputList;
+
+        while (true) {
+            Console.Write("Input your guess: ");
+            string? input = Console.ReadLine();
+            Console.Write("\n");
+
+            inputList = ConvertToList(input);
+            if (inputList.Count != 0) {
+                break;
+            }
+        }
+
+        return inputList;
     }
 
     // converts input into List<int>; returns an empty list if input is invalid
-    public static List<int> ConvertToList(string input) {
+    public static List<int> ConvertToList(string? input) {
         int inputInt;
         List<int> inputList = new();
 
-        if (input.Length != 4) {
+        if (input == null) {
+            Console.WriteLine("No input detected");
+        }
+
+        if (input!.Length != 4) {
             Console.WriteLine("Input was the wrong length");
             return new List<int>();
         }
@@ -62,7 +101,7 @@ class Program {
 
         foreach (int num in inputList) {
             if (num < 1 || num > 6) {
-                Console.WriteLine($"Invalid digit {num} detected");
+                Console.WriteLine($"Invalid digit '{num}' detected");
                 return new List<int>();
             }
         }
