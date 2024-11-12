@@ -1,4 +1,6 @@
-﻿class Program {
+﻿// Author: Jacob Seikel
+
+class Program {
     public static void Main(string[] args) {
         Console.WriteLine("Mastermind");
         Console.WriteLine("----------\n");
