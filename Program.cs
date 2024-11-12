@@ -2,35 +2,34 @@
 
 class Program {
     public static void Main(string[] args) {
-        Console.WriteLine("Mastermind");
+        bool gameIsRunning = true;
+
+        Console.WriteLine("\nMastermind");
         Console.WriteLine("----------\n");
 
-        while (true) {
+        while (gameIsRunning) {
             PlayGame();
             Console.WriteLine("Would you like to play again? (y/n)");
-            try {
-                string? input = Console.ReadLine();
-                if (input != "y") {
+            while (true) {
+                try {
+                    string? input = Console.ReadLine();
+                    if (input == "n") {
+                        gameIsRunning = false;
+                        break;
+                    }
+                    if (input == "y") {
+                        Console.Write("\n\n\n");
+                        break;
+                    }
+                } catch {
                     break;
                 }
-                Console.Write("\n\n\n");
-            } catch {
-                break;
+                Console.WriteLine("\nInvalid input; please try again.");
             }
         }
-
-
-        /*
-        var guess1 = new List<int>{1, 2, 3, 4};
-        var guess2 = new List<int>{1, 3, 5, 4};
-        var guess3 = new List<int>{1, 4, 1, 4};
-        var answer = new List<int>{1, 3, 5, 4};
-
-        Console.WriteLine(ProvideFeedback(guess3, answer));
-        */
     }
 
-    
+    // processes all of the player's guesses and provides feedback
     public static void PlayGame() {
         List<int> answer = GenerateAnswer();
         List<int> guess;
@@ -47,10 +46,10 @@ class Program {
             }
 
             feedback = ProvideFeedback(guess, answer);
-            Console.WriteLine($"Feedback: {feedback}\n");
+            Console.WriteLine($"Guess: {ListToString(guess)}; Feedback: {feedback}\n");
         }
 
-        Console.WriteLine($"Defeat... The answer was {ListToString(answer)}.\n");
+        Console.WriteLine($"Defeat... The answer was {ListToString(answer)}.\n\n");
     }
 
     // prompts user for their guess and performs input validation
@@ -162,7 +161,7 @@ class Program {
         return feedbackString;
     }
 
-    // utility function that converts the list into a string
+    // utility function that converts a list into a string
     public static string ListToString(List<int> myList) {
         string returnString = "";
         foreach (int num in myList) {
