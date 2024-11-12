@@ -1,7 +1,37 @@
-﻿class Program {
+﻿using System.Data;
+
+class Program {
     public static void Main(string[] args) {
-        List<int> myList = ConvertToList("2315");
-        PrintList(myList);
+        Console.WriteLine("Mastermind");
+        Console.WriteLine("----------\n");
+
+        while (true) {
+            PlayGame();
+            Console.WriteLine("Would you like to play again? (y/n)");
+            try {
+                string input = Console.ReadLine();
+                if (input != "y") {
+                    break;
+                }
+            } catch {
+                break;
+            }
+        }
+
+
+        /*
+        var guess1 = new List<int>{1, 2, 3, 4};
+        var guess2 = new List<int>{1, 3, 5, 4};
+        var guess3 = new List<int>{1, 4, 1, 4};
+        var answer = new List<int>{1, 3, 5, 4};
+
+        Console.WriteLine(ProvideFeedback(guess3, answer));
+        */
+    }
+
+    
+    public static void PlayGame() {
+
     }
 
     // converts input into List<int>; returns an empty list if input is invalid
@@ -40,10 +70,63 @@
         return inputList;
     }
 
-    public static void PrintList(List<int> myList) {
-        foreach (int num in myList) {
-            Console.Write(num.ToString() + " ");
+    // generates a random number to be the answer
+    public static List<int> GenerateAnswer() {
+        Random random = new();
+        List<int> answer = new();
+
+        for (int i = 0; i < 4; i++) {
+            answer.Add(random.Next(1, 7));
         }
-        Console.Write("\n");
+
+        return answer;
+    }
+
+    // returns true if the guess is correct, and false otherwise
+    public static bool CheckGuess(List<int> guess, List<int> answer) {
+        for (int i = 0; i < 4; i++) {
+            if (guess[i] != answer[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // returns a string with +'s and -'s representing how accurate the guess was
+    public static string ProvideFeedback(List<int> guess, List<int> answer) {
+        string feedbackString = "";
+
+        // copying the lists so we don't change the originals
+        List<int> guessCopy = new(guess);
+        List<int> answerCopy = new(answer);
+
+        // adds +'s
+        for (int i = 0; i < 4; i++) {
+            if (guessCopy[i] == answerCopy[i]) {
+                feedbackString += '+';
+                guessCopy[i] = -1;
+                answerCopy[i] = -1;
+            }
+        }
+
+        // adds -'s
+        for (int i = 0; i < 4; i++) {
+            if (guessCopy[i] != -1 && answerCopy.Contains(guessCopy[i])) {
+                feedbackString += '-';
+                answerCopy[answerCopy.IndexOf(guessCopy[i])] = -1;
+                guessCopy[i] = -1;
+            }
+        }
+
+        return feedbackString;
+    }
+
+    // utility function that converts the list into a string
+    public static string ListToString(List<int> myList) {
+        string returnString = "";
+        foreach (int num in myList) {
+            returnString += num.ToString();
+        }
+        return returnString;
     }
 }
