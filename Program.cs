@@ -86,6 +86,7 @@ class Program {
 
         if (input.Contains('-') || input.Contains('+')) {
             Console.WriteLine("Non-numeric character detected");
+            return new List<int>();
         }
 
         try {
